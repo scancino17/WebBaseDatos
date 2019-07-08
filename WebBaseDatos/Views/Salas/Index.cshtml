@@ -1,10 +1,10 @@
-﻿@model IEnumerable<WebBaseDatos.Edificio>
+﻿@model IEnumerable<WebBaseDatos.Sala>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h2>Edificios</h2>
+<h2>Salas</h2>
 
 <p>
     <a asp-action="Create">Crear nuevo</a>
@@ -16,10 +16,13 @@
                 <a asp-action="Index" asp-route-id="Nombre">@Html.DisplayNameFor(model => model.Nombre)</a>
             </th>
             <th>
-                <a asp-action="Index" asp-route-id="Color">@Html.DisplayNameFor(model => model.Color)</a>
+                <a asp-action="Index" asp-route-id="Capacidad">@Html.DisplayNameFor(model => model.Capacidad)</a>
             </th>
             <th>
-                <a asp-action="Index" asp-route-id="Especificación Técnica">@Html.DisplayNameFor(model => model.EspecificaciónTécnica)</a>
+                <a asp-action="Index" asp-route-id="nroPiso">@Html.DisplayNameFor(model => model.NroPiso)</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-id="Edificio_nombre">@Html.DisplayNameFor(model => model.EdificioNombre)</a>
             </th>
             <th></th>
         </tr>
@@ -31,10 +34,13 @@
                 @Html.DisplayFor(modelItem => item.Nombre)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Color)
+                @Html.DisplayFor(modelItem => item.Capacidad)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EspecificaciónTécnica)
+                @Html.DisplayFor(modelItem => item.NroPiso)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EdificioNombre)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Nombre">Editar</a> |

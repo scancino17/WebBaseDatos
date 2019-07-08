@@ -1,24 +1,22 @@
 ﻿using System;
-using Npgsql;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using WebBaseDatos;
 using System.Data;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Npgsql;
 
-namespace WebBaseDatos.Views.Edificios
+namespace WebBaseDatos.View.Salas
 {
-    public class EdificiosController : Controller
+    public class SalasController : Controller
     {
         //private readonly WebBaseDatosContext _context;
         private readonly string connectionString = "Server=localhost;Port=5432;DataBase=Proyecto;Uid=postgres;Pwd=984381257";
         private NpgsqlConnection dbConnection;
 
-        public EdificiosController()
+        public SalasController()
         {
             dbConnection = new NpgsqlConnection(connectionString);
             dbConnection.Open();
@@ -27,18 +25,20 @@ namespace WebBaseDatos.Views.Edificios
         // GET: Edificios
         public async Task<IActionResult> Index(string id)
         {
-            string query = "Select * from \"Edificio\"";
+            string query = "Select * from \"Sala\"";
 
             if (!String.IsNullOrEmpty(id))
             {
-                if (String.Equals(id, "Nombre") || String.Equals(id, "Color") || String.Equals(id, "Especificación Técnica"))
+                if (String.Equals(id, "Nombre") || String.Equals(id, "Capacidad") || String.Equals(id, "nroPiso"))
                     query = query + " order by \"" + id + "\";";
                 else
                     query = query + ";";
-            } else {
+            }
+            else
+            {
                 query = query + ";";
             }
-            return View(GetListEdificios(query));
+            return View(GetListSalas(query));
         }
 
         // GET: Edificios/Details/5
@@ -49,14 +49,14 @@ namespace WebBaseDatos.Views.Edificios
                 return NotFound();
             }
 
-            var edificio = SeleccionarEdificio(id);
+            var sala = SeleccionarSala(id);
 
-            if (edificio == null)
+            if (sala == null)
             {
                 return NotFound();
             }
-            
-            return View(edificio);
+
+            return View(sala);
         }
 
         // GET: Edificios/Create
@@ -70,16 +70,16 @@ namespace WebBaseDatos.Views.Edificios
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Nombre,Color,EspecificaciónTécnica")] Edificio edificio)
+        public async Task<IActionResult> Create([Bind("Nombre,Capacidad,NroPiso,EdificioNombre")] Sala sala)
         {
             if (ModelState.IsValid)
             {
-                string query = "INSERT INTO \"Edificio\" (\"Nombre\", \"Color\", \"Especificación Técnica\") VALUES ('" + edificio.Nombre + "', '" + edificio.Color +"', '" + edificio.EspecificaciónTécnica + "');";
+                string query = "INSERT INTO \"Sala\" (\"Nombre\", \"Capacidad\", \"nroPiso\", \"Edificio_nombre\") VALUES ('" + sala.Nombre + "', '" + sala.Capacidad + "', '" + sala.NroPiso + "', '" + sala.EdificioNombre + "');";
                 NpgsqlCommand command = new NpgsqlCommand(query, dbConnection);
                 command.ExecuteNonQuery();
                 return RedirectToAction(nameof(Index));
             }
-            return View(edificio);
+            return View(sala);
         }
 
         // GET: Edificios/Edit/5
@@ -90,13 +90,13 @@ namespace WebBaseDatos.Views.Edificios
                 return NotFound();
             }
 
-            var edificio = SeleccionarEdificio(id);
+            var sala = SeleccionarSala(id);
 
-            if (edificio == null)
+            if (sala == null)
             {
                 return NotFound();
             }
-            return View(edificio);
+            return View(sala);
         }
 
         // POST: Edificios/Edit/5
@@ -104,41 +104,41 @@ namespace WebBaseDatos.Views.Edificios
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Nombre,Color,EspecificaciónTécnica")] Edificio edificio)
+        public async Task<IActionResult> Edit(string id, [Bind("Nombre,Capacidad,NroPiso,EdificioNombre")] Sala sala)
         {
-            
-            if (id != edificio.Nombre)
+
+            if (id != sala.Nombre)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                string query = "UPDATE \"Edificio\" SET \"Color\" ='" + edificio.Color + "', \"Especificación Técnica\"='" + edificio.EspecificaciónTécnica+ "' WHERE \"Nombre\" = '" + edificio.Nombre + "';";
+                string query = "UPDATE \"Sala\" SET \"Capacidad\" ='" + sala.Capacidad + "', \"nroPiso\"='" + sala.NroPiso + "' WHERE \"Nombre\" = '" + sala.Nombre + "';";
                 var command = new NpgsqlCommand(query, dbConnection);
                 command.ExecuteNonQuery();
                 return RedirectToAction(nameof(Index));
             }
-            return View(edificio);
+            return View(sala);
         }
 
         // GET: Edificios/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
-            
+
             if (id == null)
             {
                 return NotFound();
             }
 
-            var edificio = SeleccionarEdificio(id);
+            var sala = SeleccionarSala(id);
 
-            if (edificio == null)
+            if (sala == null)
             {
                 return NotFound();
             }
-            
-            return View(edificio);
+
+            return View(sala);
         }
 
         // POST: Edificios/Delete/5
@@ -146,37 +146,33 @@ namespace WebBaseDatos.Views.Edificios
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            string query = "DELETE FROM \"Edificio\" WHERE \"Nombre\"= '" + id + "';";
+            string query = "DELETE FROM \"Sala\" WHERE \"Nombre\"= '" + id + "';";
             var command = new NpgsqlCommand(query, dbConnection);
             command.ExecuteNonQuery();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EdificioExists(string id)
+        private Sala SeleccionarSala(string id)
         {
-            //return _context.Edificio.Any(e => e.Nombre == id);
-            return true;
-        }
-
-        private Edificio SeleccionarEdificio(string id)
-        {
-            string query = "Select * from \"Edificio\" where \"Nombre\" = '" + id + "';";
+            string query = "Select * from \"Sala\" where \"Nombre\" = '" + id + "';";
             NpgsqlCommand command = new NpgsqlCommand(query, dbConnection);
             DataTable table = new DataTable();
             NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(command);
             adapter.Fill(table);
-            List<Edificio> listaEdificios = new List<Edificio>();
-            listaEdificios = (from DataRow dr in table.Rows
-                              select new Edificio()
-                              {
-                                  Nombre = dr["Nombre"].ToString(),
-                                  Color = dr["Color"].ToString(),
-                                  EspecificaciónTécnica = dr["Especificación Técnica"].ToString()
-                              }).ToList();
-            return listaEdificios[0];
+            List<Sala> listaSalas = new List<Sala>();
+            listaSalas = (from DataRow dr in table.Rows
+                          select new Sala()
+                          {
+                              Nombre = dr["Nombre"].ToString(),
+                              Capacidad = Convert.ToInt32(dr["Capacidad"].ToString()),
+                              NroPiso = Convert.ToInt32(dr["nroPiso"].ToString()),
+                              EdificioNombre = dr["Edificio_nombre"].ToString()
+                          }).ToList();
+
+            return listaSalas[0];
         }
 
-        private IEnumerable<Edificio> GetListEdificios(string query)
+        private IEnumerable<Sala> GetListSalas(string query)
         {
             NpgsqlCommand command = new NpgsqlCommand(query, dbConnection);
             NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(command);
@@ -191,16 +187,17 @@ namespace WebBaseDatos.Views.Edificios
                 Debug.WriteLine("Exception: {0}", e);
             }
 
-            IEnumerable<Edificio> listaEdificios = new List<Edificio>();
-            listaEdificios = (from DataRow dr in table.Rows
-                              select new Edificio()
+            IEnumerable<Sala> listaSalas = new List<Sala>();
+            listaSalas = (from DataRow dr in table.Rows
+                              select new Sala()
                               {
                                   Nombre = dr["Nombre"].ToString(),
-                                  Color = dr["Color"].ToString(),
-                                  EspecificaciónTécnica = dr["Especificación Técnica"].ToString()
+                                  Capacidad = Convert.ToInt32(dr["Capacidad"].ToString()),
+                                  NroPiso = Convert.ToInt32(dr["nroPiso"].ToString()),
+                                  EdificioNombre = dr["Edificio_nombre"].ToString()
                               }).ToList();
 
-            return listaEdificios;
+            return listaSalas;
         }
     }
 }

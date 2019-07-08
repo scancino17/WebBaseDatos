@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebBaseDatos
 {
@@ -12,7 +13,9 @@ namespace WebBaseDatos
 
         public string Nombre { get; set; }
         public int Capacidad { get; set; }
+        [Display (Name= "Número Piso")]
         public int NroPiso { get; set; }
+        [Display (Name = "Edificio")]
         public string EdificioNombre { get; set; }
 
         public Edificio EdificioNombreNavigation { get; set; }
