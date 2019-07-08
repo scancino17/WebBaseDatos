@@ -55,7 +55,10 @@ namespace WebBaseDatos.Views.Edificios
             {
                 return NotFound();
             }
-            
+
+            var salas = GetListSalas("Select * from \"Sala\" where \"Edificio_nombre\" = '" + id + "';");
+            ViewData["Salas"] = salas;
+
             return View(edificio);
         }
 
@@ -201,6 +204,34 @@ namespace WebBaseDatos.Views.Edificios
                               }).ToList();
 
             return listaEdificios;
+        }
+
+        private IEnumerable<Sala> GetListSalas(string query)
+        {
+            NpgsqlCommand command = new NpgsqlCommand(query, dbConnection);
+            NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(command);
+            DataTable table = new DataTable();
+            try
+            {
+                adapter.Fill(table);
+                Debug.WriteLine("Llenado Exitoso.");
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Exception: {0}", e);
+            }
+
+            IEnumerable<Sala> listaSalas = new List<Sala>();
+            listaSalas = (from DataRow dr in table.Rows
+                          select new Sala()
+                          {
+                              Nombre = dr["Nombre"].ToString(),
+                              Capacidad = Convert.ToInt32(dr["Capacidad"].ToString()),
+                              NroPiso = Convert.ToInt32(dr["nroPiso"].ToString()),
+                              EdificioNombre = dr["Edificio_nombre"].ToString()
+                          }).ToList();
+
+            return listaSalas;
         }
     }
 }
