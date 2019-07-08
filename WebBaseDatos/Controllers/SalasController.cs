@@ -7,20 +7,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
+using WebBaseDatos.Controllers;
 
 namespace WebBaseDatos.View.Salas
 {
     public class SalasController : Controller
     {
         //private readonly WebBaseDatosContext _context;
-        private readonly string connectionString = "Server=localhost;Port=5432;DataBase=Proyecto;Uid=postgres;Pwd=984381257";
         private NpgsqlConnection dbConnection;
 
-        public SalasController()
-        {
-            dbConnection = new NpgsqlConnection(connectionString);
-            dbConnection.Open();
-        }
+        public SalasController() => dbConnection = Connection.Instance.dbConnection;
+        
 
         // GET: Edificios
         public async Task<IActionResult> Index(string id)

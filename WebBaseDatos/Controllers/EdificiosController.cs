@@ -9,21 +9,17 @@ using Microsoft.EntityFrameworkCore;
 using WebBaseDatos;
 using System.Data;
 using System.Diagnostics;
+using WebBaseDatos.Controllers;
 
 namespace WebBaseDatos.Views.Edificios
 {
     public class EdificiosController : Controller
     {
-        //private readonly WebBaseDatosContext _context;
-        private readonly string connectionString = "Server=localhost;Port=5432;DataBase=Proyecto;Uid=postgres;Pwd=984381257";
+
         private NpgsqlConnection dbConnection;
 
-        public EdificiosController()
-        {
-            dbConnection = new NpgsqlConnection(connectionString);
-            dbConnection.Open();
-        }
-
+        public EdificiosController()  => dbConnection = Connection.Instance.dbConnection;
+        
         // GET: Edificios
         public async Task<IActionResult> Index(string id)
         {
