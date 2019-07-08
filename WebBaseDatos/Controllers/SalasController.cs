@@ -62,6 +62,8 @@ namespace WebBaseDatos.View.Salas
         // GET: Edificios/Create
         public IActionResult Create()
         {
+            var edificios = GetListEdificios("select * from \"Edificio\" order by \"Nombre\";");
+            ViewData["Edificios"] = edificios;
             return View();
         }
 
@@ -198,6 +200,33 @@ namespace WebBaseDatos.View.Salas
                               }).ToList();
 
             return listaSalas;
+        }
+
+        private IEnumerable<Edificio> GetListEdificios(string query)
+        {
+            NpgsqlCommand command = new NpgsqlCommand(query, dbConnection);
+            NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(command);
+            DataTable table = new DataTable();
+            try
+            {
+                adapter.Fill(table);
+                Debug.WriteLine("Llenado Exitoso.");
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Exception: {0}", e);
+            }
+
+            IEnumerable<Edificio> listaEdificios = new List<Edificio>();
+            listaEdificios = (from DataRow dr in table.Rows
+                              select new Edificio()
+                              {
+                                  Nombre = dr["Nombre"].ToString(),
+                                  Color = dr["Color"].ToString(),
+                                  EspecificaciónTécnica = dr["Especificación Técnica"].ToString()
+                              }).ToList();
+
+            return listaEdificios;
         }
     }
 }
