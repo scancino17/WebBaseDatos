@@ -1,0 +1,82 @@
+﻿@model IEnumerable<WebBaseDatos.InfoArriendo>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Información Arriendos</h2>
+
+<form asp-controller="InfoArriendos" asp-action="Index" method="get">
+    <p>
+        Filtrar por: 
+        <select name="Where">
+            <option value="Nombres">Nombres</option>
+            <option value="ApellidoP">Apellido Paterno</option>
+            <option value="ApellidoM">Apellido Materno</option>
+            <option value="Nombre">Sala</option>
+            <option value="Edificio_nombre">Edificio</option>
+            <option value="año">Año</option>
+            <option value="semestre">Semestre</option>
+        </select>
+        Valor:
+        <input type="text" name="Value"/>
+        <input type="submit" value="Filtrar"/>
+    </p>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombres)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApellidoP)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApellidoM)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EdificioNombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Año)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Semestre)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombres)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApellidoP)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApellidoM)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EdificioNombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Año)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Semestre)
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
