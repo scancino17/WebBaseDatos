@@ -12,7 +12,7 @@ namespace WebBaseDatos.Controllers
     {
         private readonly static Connection _instance = new Connection();
         //Cambiar para db
-        private readonly string connectionString = "Server=localhost;Port=5432;DataBase=tarea;Uid=postgres;Pwd=postgres";
+        private readonly string connectionString = "Server=localhost;Port=5432;DataBase=Proyecto;Uid=postgres;Pwd=984381257";
         public NpgsqlConnection dbConnection { get; }
 
         private Connection()
@@ -24,11 +24,15 @@ namespace WebBaseDatos.Controllers
         public DataTable ExecuteQuery(string query)
         {
             var command = new NpgsqlCommand(query, dbConnection);
-            DataTable table = new DataTable();
-            NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(command);
-            adapter.Fill(table);
+            if (query.Contains("Select"))
+            {
+                DataTable table = new DataTable();
+                NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(command);
+                adapter.Fill(table);
+                return table;
+            }
             command.ExecuteNonQuery();
-            return table;
+            return null;
         }
         public static Connection Instance
         {

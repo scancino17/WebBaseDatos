@@ -56,10 +56,17 @@ namespace WebBaseDatos.View.Salas
         }
 
         // GET: Edificios/Create
-        public IActionResult Create()
+        public IActionResult Create(string id)
         {
-            var edificios = GetListEdificios("select * from \"Edificio\" order by \"Nombre\";");
-            ViewData["Edificios"] = edificios;
+            if (!String.IsNullOrEmpty(id))
+            {
+                ViewData["Edificio"] = id;
+            }
+            else
+            {
+                var edificios = GetListEdificios("select * from \"Edificio\" order by \"Nombre\";");
+                ViewData["Edificios"] = edificios;
+            }
             return View();
         }
 
