@@ -26,12 +26,44 @@
 </div>
 <div>
     <h3>Salas</h3>
-    <ul>
-        @foreach (var modelSala in (IEnumerable<Sala>)ViewData["Salas"])
-        {
-            <li><a asp-area="" asp-controller="Salas" asp-action="Details" asp-route-id="@modelSala.Nombre">@modelSala.Nombre</a></li>
-        }
-     </ul>
+    <a asp-controller="Salas" asp-action="Create" asp-route-id="@Model.Nombre">Agregar nueva sala a edificio</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Nombre Sala
+                </th>
+                <th>
+                    Capacidad
+                </th>
+                <th>
+                    Número Piso
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var salaModel in (IEnumerable<Sala>)ViewData["Salas"])
+            {
+                <tr>
+                    <td>
+                        @salaModel.Nombre
+                    </td>
+                    <td>
+                        @salaModel.Capacidad
+                    </td>
+                    <td>
+                        @salaModel.NroPiso
+                    </td>
+                    <td>
+                        <a asp-controller="Salas" asp-action="Edit" asp-route-id="@salaModel.Nombre">Editar</a> |
+                        <a asp-controller="Salas" asp-action="Details" asp-route-id="@salaModel.Nombre">Detalles</a> |
+                        <a asp-controller="Salas" asp-action="Delete" asp-route-id="@salaModel.Nombre">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Nombre">Edit</a> |
