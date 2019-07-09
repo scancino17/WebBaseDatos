@@ -13,10 +13,9 @@ namespace WebBaseDatos.View.Salas
 {
     public class SalasController : Controller
     {
-        //private readonly WebBaseDatosContext _context;
-        private NpgsqlConnection dbConnection;
+        private Connection db;
 
-        public SalasController() => dbConnection = Connection.Instance.dbConnection;
+        public SalasController() => db = Connection.Instance;
         
 
         // GET: Edificios
@@ -74,8 +73,7 @@ namespace WebBaseDatos.View.Salas
             if (ModelState.IsValid)
             {
                 string query = "INSERT INTO \"Sala\" (\"Nombre\", \"Capacidad\", \"nroPiso\", \"Edificio_nombre\") VALUES ('" + sala.Nombre + "', '" + sala.Capacidad + "', '" + sala.NroPiso + "', '" + sala.EdificioNombre + "');";
-                NpgsqlCommand command = new NpgsqlCommand(query, dbConnection);
-                command.ExecuteNonQuery();
+                db.ExecuteQuery(query);
                 return RedirectToAction(nameof(Index));
             }
             return View(sala);
@@ -114,8 +112,7 @@ namespace WebBaseDatos.View.Salas
             if (ModelState.IsValid)
             {
                 string query = "UPDATE \"Sala\" SET \"Capacidad\" ='" + sala.Capacidad + "', \"nroPiso\"='" + sala.NroPiso + "' WHERE \"Nombre\" = '" + sala.Nombre + "';";
-                var command = new NpgsqlCommand(query, dbConnection);
-                command.ExecuteNonQuery();
+                db.ExecuteQuery(query);
                 return RedirectToAction(nameof(Index));
             }
             return View(sala);
@@ -146,18 +143,14 @@ namespace WebBaseDatos.View.Salas
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             string query = "DELETE FROM \"Sala\" WHERE \"Nombre\"= '" + id + "';";
-            var command = new NpgsqlCommand(query, dbConnection);
-            command.ExecuteNonQuery();
+            db.ExecuteQuery(query);
             return RedirectToAction(nameof(Index));
         }
 
         private Sala SeleccionarSala(string id)
         {
             string query = "Select * from \"Sala\" where \"Nombre\" = '" + id + "';";
-            NpgsqlCommand command = new NpgsqlCommand(query, dbConnection);
-            DataTable table = new DataTable();
-            NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(command);
-            adapter.Fill(table);
+            DataTable table = db.ExecuteQuery(query);
             List<Sala> listaSalas = new List<Sala>();
             listaSalas = (from DataRow dr in table.Rows
                           select new Sala()
@@ -173,12 +166,10 @@ namespace WebBaseDatos.View.Salas
 
         private IEnumerable<Sala> GetListSalas(string query)
         {
-            NpgsqlCommand command = new NpgsqlCommand(query, dbConnection);
-            NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(command);
             DataTable table = new DataTable();
             try
             {
-                adapter.Fill(table);
+                table = db.ExecuteQuery(query);
                 Debug.WriteLine("Llenado Exitoso.");
             }
             catch (Exception e)
@@ -201,12 +192,10 @@ namespace WebBaseDatos.View.Salas
 
         private IEnumerable<Edificio> GetListEdificios(string query)
         {
-            NpgsqlCommand command = new NpgsqlCommand(query, dbConnection);
-            NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(command);
             DataTable table = new DataTable();
             try
             {
-                adapter.Fill(table);
+                table = db.ExecuteQuery(query);
                 Debug.WriteLine("Llenado Exitoso.");
             }
             catch (Exception e)

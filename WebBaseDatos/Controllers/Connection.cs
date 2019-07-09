@@ -1,6 +1,7 @@
 ﻿using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,6 +21,15 @@ namespace WebBaseDatos.Controllers
             dbConnection.Open();
         }
 
+        public DataTable ExecuteQuery(string query)
+        {
+            var command = new NpgsqlCommand(query, dbConnection);
+            DataTable table = new DataTable();
+            NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(command);
+            adapter.Fill(table);
+            command.ExecuteNonQuery();
+            return table;
+        }
         public static Connection Instance
         {
             get => _instance;

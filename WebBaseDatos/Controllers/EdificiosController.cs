@@ -16,9 +16,9 @@ namespace WebBaseDatos.Views.Edificios
     public class EdificiosController : Controller
     {
 
-        private NpgsqlConnection dbConnection;
+        private Connection db;
 
-        public EdificiosController()  => dbConnection = Connection.Instance.dbConnection;
+        public EdificiosController()  => db = Connection.Instance;
         
         // GET: Edificios
         public async Task<IActionResult> Index(string id)
@@ -74,8 +74,7 @@ namespace WebBaseDatos.Views.Edificios
             if (ModelState.IsValid)
             {
                 string query = "INSERT INTO \"Edificio\" (\"Nombre\", \"Color\", \"Especificación Técnica\") VALUES ('" + edificio.Nombre + "', '" + edificio.Color +"', '" + edificio.EspecificaciónTécnica + "');";
-                NpgsqlCommand command = new NpgsqlCommand(query, dbConnection);
-                command.ExecuteNonQuery();
+                db.ExecuteQuery(query);
                 return RedirectToAction(nameof(Index));
             }
             return View(edificio);
@@ -114,8 +113,7 @@ namespace WebBaseDatos.Views.Edificios
             if (ModelState.IsValid)
             {
                 string query = "UPDATE \"Edificio\" SET \"Color\" ='" + edificio.Color + "', \"Especificación Técnica\"='" + edificio.EspecificaciónTécnica+ "' WHERE \"Nombre\" = '" + edificio.Nombre + "';";
-                var command = new NpgsqlCommand(query, dbConnection);
-                command.ExecuteNonQuery();
+                db.ExecuteQuery(query);
                 return RedirectToAction(nameof(Index));
             }
             return View(edificio);
@@ -146,8 +144,7 @@ namespace WebBaseDatos.Views.Edificios
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             string query = "DELETE FROM \"Edificio\" WHERE \"Nombre\"= '" + id + "';";
-            var command = new NpgsqlCommand(query, dbConnection);
-            command.ExecuteNonQuery();
+            db.ExecuteQuery(query);
             return RedirectToAction(nameof(Index));
         }
 
@@ -160,10 +157,7 @@ namespace WebBaseDatos.Views.Edificios
         private Edificio SeleccionarEdificio(string id)
         {
             string query = "Select * from \"Edificio\" where \"Nombre\" = '" + id + "';";
-            NpgsqlCommand command = new NpgsqlCommand(query, dbConnection);
-            DataTable table = new DataTable();
-            NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(command);
-            adapter.Fill(table);
+            DataTable table = db.ExecuteQuery(query);
             List<Edificio> listaEdificios = new List<Edificio>();
             listaEdificios = (from DataRow dr in table.Rows
                               select new Edificio()
@@ -177,12 +171,10 @@ namespace WebBaseDatos.Views.Edificios
 
         private IEnumerable<Edificio> GetListEdificios(string query)
         {
-            NpgsqlCommand command = new NpgsqlCommand(query, dbConnection);
-            NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(command);
             DataTable table = new DataTable();
             try
             {
-                adapter.Fill(table);
+                table = db.ExecuteQuery(query);
                 Debug.WriteLine("Llenado Exitoso.");
             }
             catch (Exception e)
@@ -204,12 +196,10 @@ namespace WebBaseDatos.Views.Edificios
 
         private IEnumerable<Sala> GetListSalas(string query)
         {
-            NpgsqlCommand command = new NpgsqlCommand(query, dbConnection);
-            NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(command);
             DataTable table = new DataTable();
             try
             {
-                adapter.Fill(table);
+                table = db.ExecuteQuery(query);
                 Debug.WriteLine("Llenado Exitoso.");
             }
             catch (Exception e)
