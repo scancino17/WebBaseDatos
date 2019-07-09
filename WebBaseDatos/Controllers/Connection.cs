@@ -12,7 +12,7 @@ namespace WebBaseDatos.Controllers
     {
         private readonly static Connection _instance = new Connection();
         //Cambiar para db
-        private readonly string connectionString = "Server=localhost;Port=5432;DataBase=proyectodb;Uid=postgres;Pwd=postgres";
+        private readonly string connectionString = "Server=localhost;Port=5432;DataBase=Proyecto;Uid=postgres;Pwd=984381257";
         public NpgsqlConnection dbConnection { get; }
 
         private Connection()
