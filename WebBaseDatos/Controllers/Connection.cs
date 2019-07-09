@@ -24,7 +24,7 @@ namespace WebBaseDatos.Controllers
         public DataTable ExecuteQuery(string query)
         {
             var command = new NpgsqlCommand(query, dbConnection);
-            if (query.Contains("Select"))
+            if (query.Contains("Select") || query.Contains("select") || query.Contains("SELECT"))
             {
                 DataTable table = new DataTable();
                 NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(command);
