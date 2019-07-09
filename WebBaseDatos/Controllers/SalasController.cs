@@ -19,9 +19,12 @@ namespace WebBaseDatos.View.Salas
         
 
         // GET: Edificios
-        public async Task<IActionResult> Index(string id)
+        public async Task<IActionResult> Index(string id, string where, string value)
         {
             string query = "Select * from \"Sala\"";
+
+            if (!String.IsNullOrEmpty(where) && !String.IsNullOrEmpty(value))
+                query = query + "except select * from \"Sala\" where \"" + where + "\" " + "< " + value;
 
             if (!String.IsNullOrEmpty(id))
             {
@@ -34,6 +37,8 @@ namespace WebBaseDatos.View.Salas
             {
                 query = query + ";";
             }
+
+            
             return View(GetListSalas(query));
         }
 

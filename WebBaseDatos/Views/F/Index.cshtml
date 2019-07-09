@@ -1,0 +1,42 @@
+﻿@model IEnumerable<WebBaseDatos.F>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+               Nombre
+            </th>
+            <th>
+                Cantidad de Salas
+            </th>
+            <th>
+                Cantidad de Instrumentos
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumSala)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CantInstrumentso)
+            </td>
+            <td>
+                <a asp-controller="Edificios" a asp-action="Details" asp-route-id="@item.Nombre">Detalles</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

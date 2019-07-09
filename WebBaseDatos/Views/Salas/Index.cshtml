@@ -9,6 +9,19 @@
 <p>
     <a asp-action="Create">Crear nuevo</a>
 </p>
+ 
+<form asp-controller="Salas" asp-action="Index" method="get">
+<p>
+    Dividir por
+    <select name="Where">
+        <option value="Capacidad">Capacidad</option>
+        <option value="nroPiso">Número Piso</option>
+    </select>
+    Valor:
+    <input type="number" name="Value" />
+    <input type="submit" value="Filtrar" />
+</p>
+</form>
 <table class="table">
     <thead>
         <tr>
@@ -28,26 +41,27 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Capacidad)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NroPiso)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EdificioNombre)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Nombre">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.Nombre">Detalles</a> |
-                <a asp-action="Delete" asp-route-id="@item.Nombre">Eliminar</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Capacidad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NroPiso)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EdificioNombre)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Nombre">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@item.Nombre">Detalles</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Nombre">Eliminar</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
